@@ -1,31 +1,30 @@
 module.exports = function getZerosCount(number, base) {
- var prime, notation, a, maxPrime, count, zerosCount  ;
+ var prime, notation, zerosCount, zerosCountArr, result;
  notation = base;
- var prime = [];
- var a = 2;
+ var prime = {};
  	 for (var i = 2; i <= notation; i++) {
-  		while(notation % i === 0){
-  			prime.push(i);
+  		while (notation % i === 0) {
+  			if (prime[i]) {
+  				prime[i] = prime[i] + 1;
+  			} else {
+  				prime[i] = 1;
+  			}
   			notation = notation/i;
   		}
   	}
- maxPrime = Math.max.apply(null, prime);
- count = 0;
- for (var i = 0; i < prime.length; i++) {
- 	if(prime[i] === maxPrime){
- 		count++;
- 	}
- }
- // console.log(prime, maxPrime, count);
- zerosCount = 0;
- for (var i = maxPrime; i <= number; i += maxPrime) {
- 	var y = i;
- 		while( y % maxPrime === 0) {
- 			y = y / maxPrime;
- 			zerosCount++;
- 		}
- 	}
- 	return Math.floor(zerosCount/count);
-
+	function zerosByPrime(number, prime, count) {
+		zerosCount = 0;
+		while(number>0){
+			number = Math.floor(number/prime);
+			zerosCount+=number;
+		}
+	 	return Math.floor(zerosCount/count);	
+	}
+	zerosCountArr = [];
+		for(var key in prime){
+			zerosCountArr.push(zerosByPrime(number, +key, prime[key]));
+		}
+	result = Math.min.apply(null, zerosCountArr);
+	
+	return result;
 }
-
